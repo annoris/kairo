@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KAIRO — Spatial Web &amp; 3D Interactive Engine</title>
+  <meta name="description" content="Real-Time Navier-Stokes Fluid Simulation, Raymarched GLSL Shaders, Rapier 3D Physics, and GSAP Choreography in Next.js 14 — Built for 60 FPS Awwwards-Level Spatial Web." />
+  <meta name="theme-color" content="#0B0C10" />
+  <meta name="author" content="Kairo Vance · KAIRO Studio" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="./kairo/logo.svg" />
+
+  <!-- OpenGraph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="KAIRO — Spatial Web &amp; 3D Interactive Engine" />
+  <meta property="og:description" content="Dark Luxury 3D Spatial Web Engine combining Next.js 14, Three.js, Navier-Stokes GLSL Shaders, Rapier 3D Physics, and GSAP." />
+  <meta property="og:image" content="./kairo/og.png" />
+  <meta property="og:url" content="https://annoris.github.io/kairo/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="KAIRO — Spatial Web &amp; 3D Interactive Engine" />
+  <meta name="twitter:description" content="Dark Luxury 3D Spatial Web Engine built for 60 FPS Awwwards-level interactive web." />
+  <meta name="twitter:image" content="./kairo/og.png" />
+
+  <!-- Editorial Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --obsidian: #0B0C10;
+      --slate: #161822;
+      --slate-elevated: #1D202D;
+      --alabaster: #F2EFE9;
+      --stone: #9A968E;
+      --vermilion: #FF5722;
+      --gold: #E5C17B;
+      --border-subtle: rgba(242, 239, 233, 0.1);
+      --border-strong: rgba(242, 239, 233, 0.2);
+      --radius-sm: 10px;
+      --radius-md: 18px;
+      --radius-lg: 26px;
+      --radius-pill: 999px;
+      --max-w: 1280px;
+      --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--obsidian);
+      color: var(--alabaster);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background-color: var(--obsidian);
+      color: var(--alabaster);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    ::selection {
+      background: var(--vermilion);
+      color: var(--obsidian);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    /* Cursor-Reactive Atmospheric Spotlight */
+    .spotlight {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(640px circle at var(--mx, 50%) var(--my, 20%), rgba(255, 87, 34, 0.11), transparent 60%),
+        radial-gradient(900px circle at calc(var(--mx, 50%) + 120px) calc(var(--my, 20%) + 160px), rgba(229, 193, 123, 0.06), transparent 65%);
+      transition: background 0.12s linear;
+    }
+
+    /* Subtle Architectural Grid Overlay */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(to right, rgba(242, 239, 233, 0.028) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(242, 239, 233, 0.028) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: radial-gradient(ellipse 85% 70% at 50% 15%, #000 30%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 85% 70% at 50% 15%, #000 30%, transparent 100%);
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        padding: 0 40px;
+      }
+    }
+
+    /* Glassmorphic Navbar */
+    .navbar {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: var(--max-w);
+      z-index: 50;
+      background: rgba(22, 24, 34, 0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-pill);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+    }
+
+    .nav-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: opacity 0.3s ease, transform 0.3s var(--ease-editorial);
+    }
+
+    .nav-brand:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .nav-brand img {
+      height: 28px;
+      width: auto;
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 32px;
+    }
+
+    @media (min-width: 900px) {
+      .nav-links {
+        display: flex;
+      }
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--stone);
+      letter-spacing: 0.02em;
+      transition: color 0.25s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--alabaster);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+      font-size: 0.875rem;
+      letter-spacing: 0.03em;
+      padding: 10px 20px;
+      border-radius: var(--radius-pill);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: transform 0.3s var(--ease-editorial), background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.3s ease, color 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--vermilion);
+      color: var(--obsidian);
+      box-shadow: 0 6px 24px rgba(255, 87, 34, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: #ff6a3c;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255, 87, 34, 0.45);
+    }
+
+    .btn-gold {
+      background: var(--gold);
+      color: var(--obsidian);
+      box-shadow: 0 6px 24px rgba(229, 193, 123, 0.22);
+    }
+
+    .btn-gold:hover {
+      background: #edd092;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(229, 193, 123, 0.35);
+    }
+
+    .btn-ghost {
+      background: rgba(22, 24, 34, 0.85);
+      color: var(--alabaster);
+      border-color: var(--border-strong);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .menu-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(242, 239, 233, 0.06);
+      border: 1px solid var(--border-subtle);
+      color: var(--alabaster);
+      cursor: pointer;
+    }
+
+    @media (min-width: 900px) {
+      .menu-toggle {
+        display: none;
+      }
+    }
+
+    .mobile-drawer {
+      position: fixed;
+      top: 84px;
+      left: 16px;
+      right: 16px;
+      z-index: 49;
+      background: rgba(22, 24, 34, 0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
+    }
+
+    .mobile-drawer.open {
+      display: flex;
+    }
+
+    .mobile-drawer a {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 500;
+      padding: 8px 4px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--alabaster);
+    }
+
+    .mobile-drawer a:last-child {
+      border-bottom: none;
+    }
+
+    /* Typography Helpers */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      background: rgba(229, 193, 123, 0.08);
+      border: 1px solid rgba(229, 193, 123, 0.25);
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--vermilion);
+      box-shadow: 0 0 12px var(--vermilion);
+      animation: pulse 2.2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1.25); }
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      color: var(--alabaster);
+    }
+
+    .section {
+      padding: 96px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (min-width: 900px) {
+      .section {
+        padding: 128px 0;
+      }
+    }
+
+    .section-header {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 52px;
+      max-width: 780px;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4.4vw, 3.6rem);
+      font-weight: 700;
+    }
+
+    .section-subtitle {
+      font-size: clamp(1rem, 1.4vw, 1.15rem);
+      color: var(--stone);
+      max-width: 620px;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding-top: 136px;
+      padding-bottom: 72px;
+    }
+
+    @media (min-width: 900px) {
+      .hero {
+        padding-top: 160px;
+        padding-bottom: 96px;
+      }
+    }
+
+    .hero-top {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 24px;
+      max-width: 960px;
+      margin: 0 auto 56px;
+    }
+
+    .hero-title {
+      font-size: clamp(2.6rem, 6.4vw, 5.4rem);
+      font-weight: 700;
+      line-height: 1.02;
+    }
+
+    .hero-title .accent {
+      background: linear-gradient(120deg, var(--alabaster) 15%, var(--gold) 65%, var(--vermilion) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-lead {
+      font-size: clamp(1.02rem, 1.55vw, 1.22rem);
+      color: var(--stone);
+      max-width: 720px;
+    }
+
+    .spec-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .spec-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      letter-spacing: 0.04em;
+      color: var(--alabaster);
+      background: rgba(22, 24, 34, 0.85);
+      border: 1px solid var(--border-subtle);
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .spec-badge span {
+      color: var(--vermilion);
+      font-weight: 600;
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    /* Cinematic Preview Frame */
+    .preview-frame {
+      position: relative;
+      border-radius: var(--radius-lg);
+      background: var(--slate);
+      border: 1px solid var(--border-strong);
+      overflow: hidden;
+      box-shadow:
+        0 32px 90px rgba(0, 0, 0, 0.65),
+        0 0 0 1px rgba(255, 87, 34, 0.12);
+    }
+
+    .preview-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      background: rgba(11, 12, 16, 0.88);
+      border-bottom: 1px solid var(--border-subtle);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--stone);
+    }
+
+    .window-dots {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .window-dots i {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: block;
+      background: rgba(242, 239, 233, 0.18);
+    }
+
+    .window-dots i:first-child {
+      background: var(--vermilion);
+    }
+
+    .window-dots i:nth-child(2) {
+      background: var(--gold);
+    }
+
+    .preview-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--alabaster);
+    }
+
+    .preview-media {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: #08090c;
+      overflow: hidden;
+    }
+
+    .preview-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    /* 5 Case Studies Gallery */
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    @media (min-width: 768px) {
+      .showcase-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .case-card.featured {
+        grid-column: span 2;
+      }
+    }
+
+    @media (min-width: 1120px) {
+      .showcase-grid {
+        grid-template-columns: repeat(6, 1fr);
+      }
+
+      .case-card.featured {
+        grid-column: span 4;
+      }
+
+      .case-card.secondary {
+        grid-column: span 2;
+      }
+
+      .case-card.third {
+        grid-column: span 2;
+      }
+    }
+
+    .case-card {
+      position: relative;
+      background: var(--slate);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: transform 0.45s var(--ease-editorial), border-color 0.35s ease, box-shadow 0.45s ease;
+    }
+
+    .case-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(229, 193, 123, 0.4);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    }
+
+    .case-media {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      overflow: hidden;
+      background: #0d0f15;
+    }
+
+    .case-card.featured .case-media {
+      aspect-ratio: 16 / 9;
+    }
+
+    .case-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.7s var(--ease-editorial);
+    }
+
+    .case-card:hover .case-media img {
+      transform: scale(1.05);
+    }
+
+    .case-media::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(11, 12, 16, 0.75) 0%, transparent 45%);
+      pointer-events: none;
+    }
+
+    .case-index {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      z-index: 2;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--alabaster);
+      background: rgba(11, 12, 16, 0.72);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-subtle);
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+    }
+
+    .case-body {
+      padding: 22px 24px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .case-meta {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .case-title {
+      font-size: 1.35rem;
+      font-weight: 600;
+    }
+
+    .case-role {
+      font-size: 0.85rem;
+      color: var(--stone);
+    }
+
+    .case-tags {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--stone);
+      background: rgba(242, 239, 233, 0.04);
+      border: 1px solid var(--border-subtle);
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+    }
+
+    .swatch {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      border: 1px solid rgba(242, 239, 233, 0.35);
+      display: inline-block;
+      margin-left: auto;
+    }
+
+    /* Studio & Architecture Section */
+    .arch-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    @media (min-width: 960px) {
+      .arch-layout {
+        grid-template-columns: 5fr 7fr;
+      }
+    }
+
+    .studio-visuals {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .portrait-card {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      background: var(--slate);
+      aspect-ratio: 4 / 5;
+    }
+
+    .portrait-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    .portrait-caption {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      padding: 14px 16px;
+      border-radius: var(--radius-sm);
+      background: rgba(11, 12, 16, 0.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .portrait-caption strong {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.98rem;
+      display: block;
+    }
+
+    .portrait-caption span {
+      font-size: 0.78rem;
+      color: var(--stone);
+    }
+
+    .studio-banner {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      background: var(--slate);
+      aspect-ratio: 16 / 9;
+    }
+
+    .studio-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .arch-details {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      justify-content: space-between;
+    }
+
+    .pillar-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    @media (min-width: 640px) {
+      .pillar-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .pillar-card {
+      background: var(--slate);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: border-color 0.3s ease, transform 0.35s var(--ease-editorial);
+    }
+
+    .pillar-card:hover {
+      border-color: rgba(255, 87, 34, 0.45);
+      transform: translateY(-3px);
+    }
+
+    .pillar-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--vermilion);
+      letter-spacing: 0.08em;
+    }
+
+    .pillar-card h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+
+    .pillar-card p {
+      font-size: 0.9rem;
+      color: var(--stone);
+      line-height: 1.6;
+    }
+
+    .arch-cta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 24px;
+      border-radius: var(--radius-md);
+      background: rgba(22, 24, 34, 0.7);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .arch-cta-bar p {
+      font-size: 0.92rem;
+      color: var(--stone);
+    }
+
+    .arch-cta-bar strong {
+      color: var(--alabaster);
+    }
+
+    /* Unlock KAIRO PRO Section */
+    .pro-card {
+      position: relative;
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(circle at 90% 10%, rgba(255, 87, 34, 0.16), transparent 45%),
+        radial-gradient(circle at 10% 90%, rgba(229, 193, 123, 0.12), transparent 50%),
+        var(--slate);
+      border: 1px solid rgba(229, 193, 123, 0.3);
+      padding: 40px 28px;
+      overflow: hidden;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+    }
+
+    @media (min-width: 900px) {
+      .pro-card {
+        padding: 64px 56px;
+      }
+    }
+
+    .pro-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    @media (min-width: 960px) {
+      .pro-grid {
+        grid-template-columns: 1.25fr 1fr;
+      }
+    }
+
+    .pro-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .pro-copy h2 {
+      font-size: clamp(2rem, 3.8vw, 3.1rem);
+    }
+
+    .pro-copy p {
+      color: var(--stone);
+      font-size: 1.02rem;
+    }
+
+    .pro-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 6px;
+    }
+
+    .tier-compare {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .tier-box {
+      background: rgba(11, 12, 16, 0.72);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 20px 22px;
+    }
+
+    .tier-box.pro {
+      border-color: rgba(255, 87, 34, 0.45);
+    }
+
+    .tier-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .tier-head strong {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem;
+    }
+
+    .tier-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .tier-pill.public {
+      background: rgba(242, 239, 233, 0.08);
+      color: var(--alabaster);
+    }
+
+    .tier-pill.private {
+      background: rgba(255, 87, 34, 0.16);
+      color: var(--vermilion);
+      border: 1px solid rgba(255, 87, 34, 0.35);
+    }
+
+    .tier-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      font-size: 0.88rem;
+      color: var(--stone);
+    }
+
+    .tier-list li::before {
+      content: '→ ';
+      color: var(--gold);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 64px 0 44px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer-top {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      justify-content: space-between;
+      padding-bottom: 44px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    @media (min-width: 768px) {
+      .footer-top {
+        flex-direction: row;
+        align-items: center;
+      }
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-brand img {
+      height: 30px;
+      width: auto;
+    }
+
+    .footer-brand p {
+      font-size: 0.9rem;
+      color: var(--stone);
+      max-width: 360px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--stone);
+      transition: color 0.25s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--vermilion);
+    }
+
+    .footer-bottom {
+      padding-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 0.82rem;
+      color: var(--stone);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Lightbox Modal */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(11, 12, 16, 0.92);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox-inner {
+      width: 100%;
+      max-width: 1040px;
+      background: var(--slate);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.75);
+    }
+
+    .lightbox-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .lightbox-head h3 {
+      font-size: 1.1rem;
+    }
+
+    .lightbox-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--alabaster);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: border-color 0.25s ease, color 0.25s ease;
+    }
+
+    .lightbox-close:hover {
+      border-color: var(--vermilion);
+      color: var(--vermilion);
+    }
+
+    .lightbox-media {
+      aspect-ratio: 16 / 9;
+      background: #08090c;
+    }
+
+    .lightbox-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .lightbox-foot {
+      padding: 16px 22px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: var(--stone);
+    }
+
+    /* Scroll Reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.75s var(--ease-editorial), transform 0.75s var(--ease-editorial);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+      .pulse-dot {
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="spotlight" id="spotlight" aria-hidden="true"></div>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <!-- Glassmorphic Navbar -->
+  <header class="navbar" role="banner">
+    <a href="#preview" class="nav-brand" aria-label="KAIRO Home">
+      <img src="./kairo/logo.svg" alt="KAIRO" />
+    </a>
+
+    <nav class="nav-links" aria-label="Primary Navigation">
+      <a href="#preview">Preview</a>
+      <a href="#showcase">Showcase</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#unlock-pro">Unlock PRO</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a href="https://github.com/annoris/kairo" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        </svg>
+        <span>Star on GitHub</span>
+      </a>
+      <button type="button" class="menu-toggle" id="menuToggle" aria-label="Toggle Menu" aria-expanded="false">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="4" y1="7" x2="20" y2="7" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="17" x2="20" y2="17" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <nav class="mobile-drawer" id="mobileDrawer" aria-label="Mobile Navigation">
+    <a href="#preview">Preview</a>
+    <a href="#showcase">Showcase</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#unlock-pro">Unlock PRO</a>
+    <a href="https://github.com/annoris/kairo/blob/main/ARCHITECTURE.md" target="_blank" rel="noopener noreferrer">Architecture Docs ↗</a>
+  </nav>
+
+  <main>
+    <!-- Hero & Live Preview -->
+    <section id="preview" class="hero">
+      <div class="container">
+        <div class="hero-top reveal">
+          <div class="eyebrow">
+            <span class="pulse-dot" aria-hidden="true"></span>
+            <span>Obsidian Noir × Molten Vermilion · v2026</span>
+          </div>
+
+          <h1 class="hero-title">
+            Spatial Web &amp; <span class="accent">3D Interactive Engine</span>
+          </h1>
+
+          <p class="hero-lead">
+            Real-time Navier-Stokes fluid simulation, procedural GLSL Perlin shaders, Rapier 3D physics, and GSAP editorial choreography — engineered for locked 60 FPS luxury web experiences.
+          </p>
+
+          <div class="spec-badges" aria-label="Technical Specifications">
+            <span class="spec-badge"><span>60 FPS</span> Locked</span>
+            <span class="spec-badge"><span>WebGL</span> / GLSL</span>
+            <span class="spec-badge"><span>Navier-Stokes</span> FBO</span>
+            <span class="spec-badge"><span>Rapier 3D</span> Physics</span>
+            <span class="spec-badge"><span>Next.js 14</span> Dual Layer</span>
+          </div>
+
+          <div class="hero-ctas">
+            <a href="#showcase" class="btn btn-gold">Explore 5 Case Studies</a>
+            <a href="#unlock-pro" class="btn btn-ghost">Unlock KAIRO PRO</a>
+          </div>
+        </div>
+
+        <div class="preview-frame reveal">
+          <div class="preview-bar">
+            <div class="window-dots" aria-hidden="true">
+              <i></i><i></i><i></i>
+            </div>
+            <span>kairo.studio — dual dom + webgl spatial engine</span>
+            <div class="preview-status">
+              <span class="pulse-dot" aria-hidden="true"></span>
+              <span>LIVE PREVIEW</span>
+            </div>
+          </div>
+          <div class="preview-media">
+            <img src="./kairo/kairo-preview.gif" alt="KAIRO Live Interactive 3D Spatial Web Preview" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 Case Studies Showcase -->
+    <section id="showcase" class="section">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">Public Visual Vault · ./kairo/</div>
+          <h2 class="section-title">Five Spatial Case Studies</h2>
+          <p class="section-subtitle">
+            Curated visual explorations rendered in high-definition WebP. Click any case study to inspect the art direction, lighting, and shader stack up close.
+          </p>
+        </div>
+
+        <div class="showcase-grid">
+          <article
+            class="case-card featured reveal"
+            data-title="Aura Atelier"
+            data-role="Architectural Spatial Commerce"
+            data-desc="Bespoke PBR material lighting and sculptural 3D product staging tailored for luxury architectural goods."
+            data-img="./kairo/aura-atelier.webp"
+            tabindex="0"
+            role="button"
+            aria-label="Inspect Aura Atelier"
+          >
+            <div class="case-media">
+              <span class="case-index">01 / AURA</span>
+              <img src="./kairo/aura-atelier.webp" alt="Aura Atelier — Architectural Spatial Commerce" loading="lazy" />
+            </div>
+            <div class="case-body">
+              <div class="case-meta">
+                <div>
+                  <h3 class="case-title">Aura Atelier</h3>
+                  <p class="case-role">Architectural Spatial Commerce</p>
+                </div>
+              </div>
+              <div class="case-tags">
+                <span class="tag">Three.js</span>
+                <span class="tag">PBR Lighting</span>
+                <span class="tag">GLSL</span>
+                <span class="swatch" style="background: #E5C17B;" title="Champagne Gold"></span>
+              </div>
+            </div>
+          </article>
+
+          <article
+            class="case-card secondary reveal"
+            data-title="SynthOS"
+            data-role="Spatial Computing Interface"
+            data-desc="Volumetric obsidian glass surfaces and floating telemetry panels running inside a unified WebGL viewport."
+            data-img="./kairo/synthos-os.webp"
+            tabindex="0"
+            role="button"
+            aria-label="Inspect SynthOS"
+          >
+            <div class="case-media">
+              <span class="case-index">02 / SYNTHOS</span>
+              <img src="./kairo/synthos-os.webp" alt="SynthOS — Spatial Computing Interface" loading="lazy" />
+            </div>
+            <div class="case-body">
+              <div class="case-meta">
+                <div>
+                  <h3 class="case-title">SynthOS</h3>
+                  <p class="case-role">Spatial Computing Interface</p>
+                </div>
+              </div>
+              <div class="case-tags">
+                <span class="tag">WebGL</span>
+                <span class="tag">FBO Pass</span>
+                <span class="swatch" style="background: #FF5722;" title="Molten Vermilion"></span>
+              </div>
+            </div>
+          </article>
+
+          <article
+            class="case-card third reveal"
+            data-title="Monolith CAD"
+            data-role="Parametric 3D Sculpting Engine"
+            data-desc="Brutalist precision tooling paired with real-time Rapier 3D physics and metallic reflection shaders."
+            data-img="./kairo/monolith-cad.webp"
+            tabindex="0"
+            role="button"
+            aria-label="Inspect Monolith CAD"
+          >
+            <div class="case-media">
+              <span class="case-index">03 / MONOLITH</span>
+              <img src="./kairo/monolith-cad.webp" alt="Monolith CAD — Parametric 3D Sculpting Engine" loading="lazy" />
+            </div>
+            <div class="case-body">
+              <div class="case-meta">
+                <div>
+                  <h3 class="case-title">Monolith CAD</h3>
+                  <p class="case-role">Parametric 3D Engine</p>
+                </div>
+              </div>
+              <div class="case-tags">
+                <span class="tag">Rapier 3D</span>
+                <span class="tag">60 FPS</span>
+                <span class="swatch" style="background: #F2EFE9;" title="Warm Alabaster"></span>
+              </div>
+            </div>
+          </article>
+
+          <article
+            class="case-card third reveal"
+            data-title="Veloura Labs"
+            data-role="Kinetic Brand &amp; Luxury Motion"
+            data-desc="Editorial typography choreographed with GSAP SplitType, Lenis inertia scroll, and procedural Perlin noise."
+            data-img="./kairo/veloura-labs.webp"
+            tabindex="0"
+            role="button"
+            aria-label="Inspect Veloura Labs"
+          >
+            <div class="case-media">
+              <span class="case-index">04 / VELOURA</span>
+              <img src="./kairo/veloura-labs.webp" alt="Veloura Labs — Kinetic Brand & Luxury Motion" loading="lazy" />
+            </div>
+            <div class="case-body">
+              <div class="case-meta">
+                <div>
+                  <h3 class="case-title">Veloura Labs</h3>
+                  <p class="case-role">Kinetic Luxury Motion</p>
+                </div>
+              </div>
+              <div class="case-tags">
+                <span class="tag">GSAP 3.12</span>
+                <span class="tag">Lenis</span>
+                <span class="swatch" style="background: #E5C17B;" title="Champagne Gold"></span>
+              </div>
+            </div>
+          </article>
+
+          <article
+            class="case-card third reveal"
+            data-title="Pulsar Engine"
+            data-role="Real-Time Audio-Reactive WebGL"
+            data-desc="GPU ping-pong Navier-Stokes dye advection blended optically over dark editorial typography."
+            data-img="./kairo/pulsar-engine.webp"
+            tabindex="0"
+            role="button"
+            aria-label="Inspect Pulsar Engine"
+          >
+            <div class="case-media">
+              <span class="case-index">05 / PULSAR</span>
+              <img src="./kairo/pulsar-engine.webp" alt="Pulsar Engine — Real-Time Audio-Reactive WebGL" loading="lazy" />
+            </div>
+            <div class="case-body">
+              <div class="case-meta">
+                <div>
+                  <h3 class="case-title">Pulsar Engine</h3>
+                  <p class="case-role">Navier-Stokes WebGL</p>
+                </div>
+              </div>
+              <div class="case-tags">
+                <span class="tag">Navier-Stokes</span>
+                <span class="tag">GLSL</span>
+                <span class="swatch" style="background: #FF5722;" title="Molten Vermilion"></span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Studio, Portrait & Architecture -->
+    <section id="architecture" class="section">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="eyebrow">Studio &amp; Engine Architecture</div>
+          <h2 class="section-title">Dual-Layer DOM + WebGL Precision</h2>
+          <p class="section-subtitle">
+            Designed in Zurich by Kairo Vance. Every pixel balances editorial restraint with real-time GPU simulation under a single synchronized frame clock.
+          </p>
+        </div>
+
+        <div class="arch-layout">
+          <div class="studio-visuals reveal">
+            <div class="portrait-card">
+              <img src="./kairo/portrait.webp" alt="Kairo Vance — Creative Technologist & Spatial Web Engineer" loading="lazy" />
+              <div class="portrait-caption">
+                <div>
+                  <strong>Kairo Vance</strong>
+                  <span>Creative Technologist · Zurich, CH</span>
+                </div>
+                <span class="spec-badge"><span>KAIRO</span> Studio</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="arch-details reveal">
+            <div class="studio-banner">
+              <img src="./kairo/hero-studio.webp" alt="KAIRO Spatial Web Studio Environment" loading="lazy" />
+            </div>
+
+            <div class="pillar-grid">
+              <div class="pillar-card">
+                <span class="pillar-num">01 / DUAL LAYER</span>
+                <h3>DOM + WebGL Synchronization</h3>
+                <p>One persistent React Three Fiber canvas uses Drei <code>View.Port</code> scissoring to bind 3D scenes directly to semantic HTML scroll containers.</p>
+              </div>
+
+              <div class="pillar-card">
+                <span class="pillar-num">02 / GPU FLUIDS</span>
+                <h3>Navier-Stokes &amp; Perlin Shaders</h3>
+                <p>Multi-pass GPU ping-pong FBOs solve curl, vorticity, pressure, and advection in real time, layered with procedural Perlin noise ridges.</p>
+              </div>
+
+              <div class="pillar-card">
+                <span class="pillar-num">03 / CHOREOGRAPHY</span>
+                <h3>GSAP + Lenis + Tempus</h3>
+                <p>A unified <code>Tempus</code> RAF loop drives Lenis smooth scroll, GSAP ScrollTrigger parallax uncover, and SplitType transitions with zero jitter.</p>
+              </div>
+
+              <div class="pillar-card">
+                <span class="pillar-num">04 / PHYSICS</span>
+                <h3>Rapier 3D Rigid Bodies</h3>
+                <p>WASM-accelerated rigid-body collisions power tactile hero interactions while staying locked at 60 FPS across desktop and mobile.</p>
+              </div>
+            </div>
+
+            <div class="arch-cta-bar">
+              <p>Want the full shader pipeline breakdown? Read <strong>ARCHITECTURE.md</strong> on GitHub.</p>
+              <a href="https://github.com/annoris/kairo/blob/main/ARCHITECTURE.md" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+                Read Architecture ↗
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Unlock KAIRO PRO -->
+    <section id="unlock-pro" class="section">
+      <div class="container">
+        <div class="pro-card reveal">
+          <div class="pro-grid">
+            <div class="pro-copy">
+              <div class="eyebrow">Private Repository Access</div>
+              <h2>🔒 Unlock KAIRO PRO</h2>
+              <p>
+                The visual vault (<code>./kairo/</code>), interactive showcase, and technical architecture docs are open to everyone in <strong>annoris/kairo</strong>.
+              </p>
+              <p>
+                The complete downloadable Next.js 14 production source code — including all GLSL shaders, Navier-Stokes fluid passes, Rapier 3D physics scenes, and GSAP choreography — lives in the private repository <strong>annoris/kairo-pro</strong> and unlocks when you contribute.
+              </p>
+              <div class="pro-actions">
+                <a href="https://github.com/annoris/kairo/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                  How to Unlock via Contributing
+                </a>
+                <a href="https://github.com/annoris/kairo-pro" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+                  Visit annoris/kairo-pro ↗
+                </a>
+              </div>
+            </div>
+
+            <div class="tier-compare">
+              <div class="tier-box">
+                <div class="tier-head">
+                  <strong>annoris/kairo</strong>
+                  <span class="tier-pill public">Public</span>
+                </div>
+                <ul class="tier-list">
+                  <li>Full HD visual vault (<code>kairo/*.webp</code>, <code>logo.svg</code>, <code>kairo-preview.gif</code>)</li>
+                  <li>Interactive GitHub Pages showcase &amp; design system tokens</li>
+                  <li>Complete <code>ARCHITECTURE.md</code> &amp; <code>CONTRIBUTING.md</code> guides</li>
+                </ul>
+              </div>
+
+              <div class="tier-box pro">
+                <div class="tier-head">
+                  <strong>annoris/kairo-pro</strong>
+                  <span class="tier-pill private">Private · PRO</span>
+                </div>
+                <ul class="tier-list">
+                  <li>Full downloadable Next.js 14 + Three.js r167 + R3F codebase</li>
+                  <li>Production Navier-Stokes &amp; Perlin GLSL shaders</li>
+                  <li>Rapier 3D scenes, GSAP timelines &amp; Lenis smooth scroll setup</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Editorial Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="./kairo/logo.svg" alt="KAIRO" />
+          <p>Spatial Web &amp; 3D Interactive Engine — Obsidian Noir × Molten Vermilion × Warm Alabaster.</p>
+        </div>
+
+        <div class="footer-links">
+          <a href="https://github.com/annoris/kairo" target="_blank" rel="noopener noreferrer">annoris/kairo</a>
+          <a href="https://github.com/annoris/kairo-pro" target="_blank" rel="noopener noreferrer">annoris/kairo-pro</a>
+          <a href="https://github.com/annoris/kairo/blob/main/ARCHITECTURE.md" target="_blank" rel="noopener noreferrer">ARCHITECTURE.md</a>
+          <a href="https://github.com/annoris/kairo/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">CONTRIBUTING.md</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 KAIRO STUDIO · ZURICH, CH</span>
+        <span>DARK LUXURY EDITORIAL · 60 FPS</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
+    <div class="lightbox-inner">
+      <div class="lightbox-head">
+        <h3 id="lightboxTitle">Case Study</h3>
+        <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Close preview">&#10005;</button>
+      </div>
+      <div class="lightbox-media">
+        <img id="lightboxImg" src="" alt="" />
+      </div>
+      <div class="lightbox-foot">
+        <span id="lightboxDesc"></span>
+        <span id="lightboxRole" class="tag"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      // Cursor-reactive atmospheric spotlight
+      const spotlight = document.getElementById('spotlight');
+      if (spotlight && window.matchMedia('(pointer: fine)').matches) {
+        window.addEventListener('pointermove', function (e) {
+          spotlight.style.setProperty('--mx', e.clientX + 'px');
+          spotlight.style.setProperty('--my', e.clientY + 'px');
+        }, { passive: true });
+      }
+
+      // Mobile navigation drawer
+      const menuToggle = document.getElementById('menuToggle');
+      const mobileDrawer = document.getElementById('mobileDrawer');
+      if (menuToggle && mobileDrawer) {
+        menuToggle.addEventListener('click', function () {
+          const isOpen = mobileDrawer.classList.toggle('open');
+          menuToggle.setAttribute('aria-expanded', String(isOpen));
+        });
+        mobileDrawer.querySelectorAll('a').forEach(function (link) {
+          link.addEventListener('click', function () {
+            mobileDrawer.classList.remove('open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+          });
+        });
+      }
+
+      // Scroll reveal observer
+      const revealEls = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        revealEls.forEach(function (el) { observer.observe(el); });
+      } else {
+        revealEls.forEach(function (el) { el.classList.add('visible'); });
+      }
+
+      // Case study lightbox
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      const lightboxTitle = document.getElementById('lightboxTitle');
+      const lightboxDesc = document.getElementById('lightboxDesc');
+      const lightboxRole = document.getElementById('lightboxRole');
+      const lightboxClose = document.getElementById('lightboxClose');
+
+      function openLightbox(card) {
+        lightboxImg.src = card.dataset.img;
+        lightboxImg.alt = card.dataset.title;
+        lightboxTitle.textContent = card.dataset.title;
+        lightboxDesc.textContent = card.dataset.desc;
+        lightboxRole.textContent = card.dataset.role;
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      document.querySelectorAll('.case-card').forEach(function (card) {
+        card.addEventListener('click', function () { openLightbox(card); });
+        card.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openLightbox(card);
+          }
+        });
+      });
+
+      if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
+      if (lightbox) {
+        lightbox.addEventListener('click', function (e) {
+          if (e.target === lightbox) closeLightbox();
+        });
+      }
+      window.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+      });
+    })();
+  </script>
+</body>
+</html>
