@@ -1,0 +1,25 @@
+{
+  "name": "KAIRO — Creative Technologist & Spatial Web Studio",
+  "short_name": "KAIRO",
+  "description": "Creative Technologist & Spatial Web Studio crafting bespoke 3D interactive web experiences, WebGL systems, and editorial digital products.",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "theme_color": "#0B0C10",
+  "background_color": "#0B0C10",
+  "start_url": "/",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait"
+}
