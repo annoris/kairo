@@ -1,0 +1,18 @@
+<svg width="332" height="96" viewBox="0 0 166 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>KAIRO — Creative Technologist &amp; Spatial Web Studio</title>
+  <!-- KAIRO Architectural Isotype -->
+  <g>
+    <path d="M8.5 11L13.5 6H15.5V42H8.5V11Z" fill="#F2EFE9"/>
+    <path d="M30.5 6H39.5L18.5 27V18L30.5 6Z" fill="#F2EFE9"/>
+    <path d="M18.5 30L23 25.5L39.5 42H30.5L18.5 30Z" fill="#F2EFE9"/>
+    <circle cx="35.5" cy="24" r="4" fill="#FF5722"/>
+  </g>
+  <!-- KAIRO Geometric Wordmark -->
+  <g transform="translate(56, 0)" fill="#F2EFE9">
+    <path d="M0 13H3.4V22.4L12.4 13H16.8L8.4 21.8L17.4 35H13.2L6 24.3L3.4 27V35H0V13Z"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M29.6 13H33.4L41.4 35H37.6L35.8 29.8H27.2L25.4 35H21.6L29.6 13ZM31.5 17.4L28.3 26.6H34.7L31.5 17.4Z"/>
+    <path d="M47.4 13H50.8V35H47.4V13Z"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M58.2 13H68.4C72.2 13 74.8 15.6 74.8 19.4C74.8 22.4 73.1 24.6 70.3 25.4L75.6 35H71.6L66.7 25.8H61.6V35H58.2V13ZM61.6 16.2V22.6H68.2C70.2 22.6 71.4 21.3 71.4 19.4C71.4 17.5 70.2 16.2 68.2 16.2H61.6Z"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M92.8 12.8C86.6144 12.8 81.6 17.8144 81.6 24C81.6 30.1856 86.6144 35.2 92.8 35.2C98.9856 35.2 104 30.1856 104 24C104 17.8144 98.9856 12.8 92.8 12.8ZM92.8 16.1C97.163 16.1 100.7 19.637 100.7 24C100.7 28.363 97.163 31.9 92.8 31.9C88.437 31.9 84.9 28.363 84.9 24C84.9 19.637 88.437 16.1 92.8 16.1Z"/>
+  </g>
+</svg>
