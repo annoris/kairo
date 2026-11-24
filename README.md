@@ -1,46 +1,28 @@
 <div align="center">
-  <img src="./kairo/logo.svg" alt="KAIRO Logo" width="210" />
-
+  <img src="./kairo/logo.svg" alt="KAIRO Logo" width="180" />
   <h1>KAIRO — Spatial Web &amp; 3D Interactive Engine</h1>
-
+  <p><strong>Real-Time Navier-Stokes Fluid Simulation + Raymarched GLSL Shaders + Rapier 3D Physics + GSAP Choreography in Next.js 14 — Built for 60 FPS Awwwards-Level Spatial Web.</strong></p>
+  <p><sub><em>Experiencia Web Espacial 3D · Estética Dark Luxury · Arquitectura dual DOM + WebGL</em></sub></p>
   <p>
-    <strong>Real-Time Navier-Stokes Fluid Simulation + Raymarched GLSL Shaders + Rapier 3D Physics + GSAP Choreography in Next.js 14 — Built for 60 FPS Awwwards-Level Spatial Web.</strong>
-  </p>
-  <p>
-    <sub><em>Experiencia Web Espacial 3D · Estética Dark Luxury · Arquitectura dual DOM + WebGL</em></sub>
-  </p>
-
-  <p>
-    <a href="https://github.com/annoris/kairo/stargazers">
-      <img src="https://img.shields.io/github/stars/annoris/kairo?style=for-the-badge&color=E5C17B&labelColor=0B0C10" alt="GitHub Stars" />
-    </a>
-    <a href="https://github.com/annoris/kairo/network/members">
-      <img src="https://img.shields.io/github/forks/annoris/kairo?style=for-the-badge&color=FF5722&labelColor=0B0C10" alt="GitHub Forks" />
-    </a>
-    <a href="https://github.com/annoris/kairo/issues">
-      <img src="https://img.shields.io/github/issues/annoris/kairo?style=for-the-badge&color=F2EFE9&labelColor=0B0C10" alt="GitHub Issues" />
-    </a>
-    <br />
-    <img src="https://img.shields.io/badge/Next.js-14-0B0C10?style=for-the-badge&logo=nextdotjs&logoColor=F2EFE9" alt="Next.js 14" />
-    <img src="https://img.shields.io/badge/Three.js-r167-0B0C10?style=for-the-badge&logo=threedotjs&logoColor=E5C17B" alt="Three.js" />
-    <img src="https://img.shields.io/badge/WebGL%20%2F%20GLSL-Shaders-FF5722?style=for-the-badge&logo=webgl&logoColor=0B0C10" alt="WebGL / GLSL" />
-    <img src="https://img.shields.io/badge/GSAP-3.12-0B0C10?style=for-the-badge&logo=greensock&logoColor=E5C17B" alt="GSAP" />
+    <a href="https://annoris.github.io/kairo/"><img src="https://img.shields.io/badge/🚀%20LIVE%20DEMO-annoris.github.io%2Fkairo-FF5722?style=for-the-badge&labelColor=0B0C10" alt="Live Demo" /></a>
+    <a href="https://github.com/annoris/kairo/stargazers"><img src="https://img.shields.io/github/stars/annoris/kairo?style=for-the-badge&color=E5C17B&labelColor=0B0C10" alt="GitHub Stars" /></a>
+    <img src="https://img.shields.io/badge/Next.js_14_%7C_Three.js-WebGL%2FGLSL-0B0C10?style=for-the-badge&logo=threedotjs&logoColor=E5C17B" alt="Next.js 14 & Three.js" />
     <img src="https://img.shields.io/badge/Performance-60%20FPS-E5C17B?style=for-the-badge&labelColor=0B0C10" alt="60 FPS" />
   </p>
-
   <p>
+    <a href="https://annoris.github.io/kairo/"><strong>🚀 Live Demo</strong></a> ·
     <a href="#-whats-inside-the-engine-curiosity-teasers">Engine Teasers</a> ·
     <a href="#-performance--architecture-scorecard">Benchmarks</a> ·
-    <a href="#-explore-the-public-kairo-visual-vault">Visual Vault (<code>kairo/</code>)</a> ·
-    <a href="./ARCHITECTURE.md">Architecture Deep-Dive</a> ·
+    <a href="#-explore-the-public-kairo-visual-vault">Visual Vault</a> ·
+    <a href="./ARCHITECTURE.md">Architecture</a> ·
     <a href="#-unlock-annoriskairo-pro-full-downloadable-source-code">Unlock <code>kairo-pro</code></a>
   </p>
 </div>
 
----
-
 <div align="center">
-  <img src="./kairo/kairo-preview.gif" alt="KAIRO Live Showcase" width="100%" />
+  <a href="https://annoris.github.io/kairo/">
+    <img src="./kairo/kairo-preview.gif" alt="KAIRO Live Showcase" width="100%" />
+  </a>
   <br />
   <h3>⭐ Star this repo if you love WebGL, GLSL Shaders &amp; Creative Engineering!</h3>
   <sub><em>Si te apasiona el Creative Coding, Three.js y el diseño Dark Luxury, deja tu ⭐ arriba — impulsa el proyecto y ayuda a que más devs lo descubran.</em></sub>
@@ -197,11 +179,11 @@ Every HD editorial visual, brand SVG, and case-study artwork is **openly browsab
 
 This public repository (**[`annoris/kairo`](https://github.com/annoris/kairo)**) showcases the **architecture, live GIF preview, engine teasers, and the public [`kairo/`](./kairo/) visual vault**.
 
-The **complete, production-ready, downloadable source code** (all Next.js 14 pages, custom GLSL shaders, Navier-Stokes FBO fluid solver, Rapier 3D scenes, GSAP/Lenis choreography, and build pipeline) lives in the private repository **[`annoris/kairo-pro`](https://github.com/annoris/kairo-pro)**.
+The **complete, production-ready, downloadable source code** (all Next.js 14 pages, custom GLSL shaders, Navier-Stokes FBO fluid solver, Rapier 3D scenes, GSAP/Lenis choreography, and build pipeline) lives in the private repository **`annoris/kairo-pro`** (invite-only; see [`CONTRIBUTING.md`](./CONTRIBUTING.md) for access & licensing).
 
 ### 🏆 Contribute-to-Unlock Model (*Acceso Exclusivo para Contribuidores*)
 
-We reward builders who add value to the community. **Star this repo and complete any one of these paths to receive an official GitHub collaborator invite to [`annoris/kairo-pro`](https://github.com/annoris/kairo-pro):**
+We reward builders who add value to the community. **Star this repo and complete any one of these paths to receive an official GitHub collaborator invite to `annoris/kairo-pro`:**
 
 1. **🛠️ Submit a Valuable Pull Request** to [`annoris/kairo`](https://github.com/annoris/kairo) — architecture diagrams, GLSL/WebGL guides, performance notes, or translations.
 2. **🧠 Open a High-Signal Technical Issue** in [`annoris/kairo/issues`](https://github.com/annoris/kairo/issues) — deep UX/WebGL audit, shader optimization ideas, or accessibility improvements.
@@ -228,6 +210,33 @@ Love spatial web, WebGL shaders, and creative engineering? Help put **KAIRO** on
     <img src="https://img.shields.io/badge/Star%20Repo-annoris%2Fkairo-FF5722?style=for-the-badge&logo=github&logoColor=0B0C10" alt="Star annoris/kairo" />
   </a>
 </div>
+
+---
+
+## 🌐 Explore the JAP INTERNATIONAL & Annoris Ecosystem
+
+### 🤖 AI & Local-First Business Automation
+| Repository | Focus & Highlights | Links |
+| :--- | :--- | :--- |
+| **[`aetheris`](https://github.com/annoris/aetheris)** | Zero-dependency AI Agent & Business Automation Platform (77 agents, 328 workflow skills, MCP & hooks dashboard) | [Repo](https://github.com/annoris/aetheris) · [Live Demo](https://annoris.github.io/aetheris/) |
+| **[`aurelia`](https://github.com/annoris/aurelia)** | Refined local-first web experience & design automation showcase | [Repo](https://github.com/annoris/aurelia) · [Live Demo](https://annoris.github.io/aurelia/) |
+| **[`lumenpitch`](https://github.com/annoris/lumenpitch)** | AI-assisted pitch deck & interactive presentation studio | [Repo](https://github.com/annoris/lumenpitch) · [Live Demo](https://annoris.github.io/lumenpitch/) |
+| **[`tabvento`](https://github.com/annoris/tabvento)** | Local-first browser tab & workspace organizer built for focus and speed | [Repo](https://github.com/annoris/tabvento) · [Live Demo](https://annoris.github.io/tabvento/) |
+| **[`trading-bauhaus-journal`](https://github.com/annoris/trading-bauhaus-journal)** | Bauhaus-inspired local-first trading journal & performance analytics | [Repo](https://github.com/annoris/trading-bauhaus-journal) · [Live Demo](https://annoris.github.io/trading-bauhaus-journal/) |
+
+### 🎨 Creative Engineering & 60 FPS Experiences
+| Repository | Stack & Craft Highlights | Links |
+| :--- | :--- | :--- |
+| **[`kairo`](https://github.com/annoris/kairo)** | Next.js 14 · Three.js · Real-Time Navier-Stokes GLSL Fluid + Rapier 3D Physics | [Repo](https://github.com/annoris/kairo) · [Live Demo](https://annoris.github.io/kairo/) |
+| **[`valence`](https://github.com/annoris/valence)** `[MIT]` | Zero-Bundler HTML5/CSS3/GSAP + Locomotive Scroll 60 FPS Venture Studio Template | [Repo](https://github.com/annoris/valence) · [Live Demo](https://annoris.github.io/valence/) |
+| **[`luma`](https://github.com/annoris/luma)** | Zero-Dep HTML5/CSS3/JS · 106 BPM Web Audio Synth + Pure-CSS Soda Can + Solana Pay | [Repo](https://github.com/annoris/luma) · [Live Demo](https://annoris.github.io/luma/) |
+| **[`valtor`](https://github.com/annoris/valtor)** | Vanilla ES Modules · GSAP 3.15 + Lenis 1.3 Swiss Luxury Automotive Flagship | [Repo](https://github.com/annoris/valtor) · [Live Demo](https://annoris.github.io/valtor/) |
+| **[`solterra`](https://github.com/annoris/solterra)** | React 19 · Vite 6 · Tailwind 4 · GSAP 3.13 ScrollSmoother + SplitText Preloader | [Repo](https://github.com/annoris/solterra) · [Live Demo](https://annoris.github.io/solterra/) |
+| **[`moxie`](https://github.com/annoris/moxie)** | Next.js 15 · React 19 · GSAP Inertia Physics + Elastic Cursor Bubbles + SVG Scribbles | [Repo](https://github.com/annoris/moxie) · [Live Demo](https://annoris.github.io/moxie/) |
+| **[`kineta`](https://github.com/annoris/kineta)** | Zero-Build ES Modules · Variable Font Proximity Physics + Pinned 3D Stack + Solana Pay | [Repo](https://github.com/annoris/kineta) · [Live Demo](https://annoris.github.io/kineta/) |
+| **[`solmora`](https://github.com/annoris/solmora)** `[MIT]` | Buildless HTML5/CSS3/JS · Spring-Damper Inclined Jar Orbit + Native `<dialog>` Modals | [Repo](https://github.com/annoris/solmora) · [Live Demo](https://annoris.github.io/solmora/) |
+
+> ⭐ **Enjoying these builds?** Starring the repositories that inspire you helps independent **JAP INTERNATIONAL & Annoris** engineering reach more developers and designers worldwide.
 
 <br />
 
